@@ -6,6 +6,7 @@ import DefaultLayout from '../layouts/DefaultLayout.vue'
 
 // Views
 import HomePage from '../views/HomePage.vue'
+import ProductPage from '../views/ProductPage.vue'
 import ProductDetail from '../views/ProductDetail.vue'
 import CartPage from '../views/CartPage.vue'
 import CheckoutPage from '../views/CheckoutPage.vue'
@@ -29,8 +30,17 @@ const router = createRouter({
           name: 'Home',
           component: HomePage,
           meta: {
-            title: "Biti's Hunter - Trang chủ",
+            title: "ShoesStore - Trang chủ",
             icon: Home,
+          },
+        },
+        {
+          path: '/products',
+          name: 'Products',
+          component: ProductPage,
+          meta: {
+            title: 'Sản phẩm',
+            icon: ShoppingBag,
           },
         },
         {
@@ -133,7 +143,7 @@ const router = createRouter({
 
 // Navigation guard
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || "Biti's Hunter"
+  document.title = to.meta.title || "ShoesStore"
   
   // Check if route requires authentication
   if (to.meta.requiresAuth) {

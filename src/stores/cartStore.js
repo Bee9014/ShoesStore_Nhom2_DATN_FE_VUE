@@ -30,10 +30,11 @@ export const useCartStore = defineStore('cart', () => {
   })
   
   // Actions
-  const addToCart = (product, size, color, quantity = 1, variantId = null) => {
+  const addToCart = (product, size, color, quantity = 1, variantId = null,  variantPrice = null) => {
     // IMPORTANT: variantId is REQUIRED for order creation
     // If not provided, use productId as fallback (temporary solution)
     const actualVariantId = variantId || product.variantId || product.productId
+    const actualPrice = variantPrice || product.basePrice
     
     const existingItem = items.value.find(
       item => item.variantId === actualVariantId
@@ -46,7 +47,7 @@ export const useCartStore = defineStore('cart', () => {
         productId: product.productId,
         variantId: actualVariantId, // ✅ Store actual variantId
         name: product.name || product.title,
-        price: product.basePrice,
+        price: actualPrice,
         imageUrl: product.imageUrl || product.defaultImage,
         size,
         color,

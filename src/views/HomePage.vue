@@ -2,11 +2,11 @@
   <div class="home-page">
     <section class="main-banner">
       <div class="banner-image-container">
-        <img src="@/assets/img/Screenshot 2025-12-03 175826.png" alt="Giày Biti's Hunter" class="main-shoe-image">
+        <img src="@/assets/img/Screenshot 2025-12-03 175826.png" alt="Giày ShoesStore" class="main-shoe-image">
       </div>
 
       <div class="banner-content">
-        <h2 class="title-hunter">BITI'S HUNTER THẾ HỆ MỚI</h2>
+        <h2 class="title-hunter">SHOESSTORE - GIÀY THỂ THAO CHÍNH HÃNG</h2>
         <div class="deal-text">
           <p>DEAL LƯƠNG VỀ</p>
           <p>SĂN THÍCH MÊ</p>
@@ -58,6 +58,21 @@
        <div class="spinner"></div> Đang tải sản phẩm nổi bật...
     </div>
 
+    <!-- Best Sellers Section -->
+    <section class="bestseller-products" v-if="productStore.bestsellerProducts.length > 0">
+      <div class="section-header">
+        <h2 class="section-title">SẢN PHẨM BÁN CHẠY</h2>
+      </div>
+
+      <div class="product-grid">
+        <ProductCard
+          v-for="product in productStore.bestsellerProducts"
+          :key="'best-' + product.productId"
+          :product="product"
+        />
+      </div>
+    </section>
+
   </div>
 </template>
 
@@ -70,6 +85,7 @@ const productStore = useProductStore()
 
 onMounted(async () => {
   await productStore.fetchFeaturedList()
+  await productStore.fetchBestsellersList()
 })
 </script>
 
@@ -219,6 +235,16 @@ onMounted(async () => {
 /* --- PRODUCT SECTION STYLES (Giữ nguyên) --- */
 .featured-products {
   padding: 60px 5%;
+}
+
+/* === BEST SELLERS SECTION === */
+.bestseller-products {
+  padding: 60px 5%;
+  background-color: #fff9f5;
+}
+
+.bestseller-products .section-title {
+  color: #ff5000;
 }
 
 .section-header {

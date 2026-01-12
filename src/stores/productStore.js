@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getAllProducts, getProductById, getProductsByCategory, getFeaturedProducts } from '../api/product'
+import { getAllProducts, getProductById, getProductsByCategory, getFeaturedProducts, getBestSellers } from '../api/product'
 
 export const useProductStore = defineStore('product', () => {
   const products = ref([])
   const featuredProducts = ref([])
+  const bestsellerProducts = ref([])
   const product = ref(null)
   const loading = ref(false)
   const error = ref(null)
@@ -53,6 +54,18 @@ export const useProductStore = defineStore('product', () => {
     }
   }
 
+  const fetchBestsellersList = async () => {
+    try {
+      const response = await getBestSellers()
+      if (response.success && response.data) {
+        bestsellerProducts.value = response.data
+      }
+    } catch (err) {
+      console.error('Lỗi tải sản phẩm bán chạy:', err)
+      bestsellerProducts.value = []
+    }
+  }
+
   const fetchProductById = async (id) => {
     loading.value = true
     error.value = null
@@ -98,12 +111,14 @@ export const useProductStore = defineStore('product', () => {
   return {
     products,
     featuredProducts,
+    bestsellerProducts,
     product,
     loading,
     error,
     pagination,
     fetchProducts,
     fetchFeaturedList,
+    fetchBestsellersList,
     fetchProductById,
     fetchProductsByCategory,
   }

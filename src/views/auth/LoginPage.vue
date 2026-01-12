@@ -16,6 +16,7 @@
             type="text"
             id="username"
             v-model="formData.username"
+            @input="errorMessage = ''"
             required
             placeholder="Nhập tên đăng nhập..."
           >
@@ -27,6 +28,7 @@
             type="password"
             id="password"
             v-model="formData.password"
+            @input="errorMessage = ''"
             required
             placeholder="Nhập mật khẩu..."
           >
@@ -67,19 +69,38 @@ const loading = ref(false)
 const errorMessage = ref('')
 
 const handleLogin = async () => {
+  // 1. Reset trạng thái
   loading.value = true
   errorMessage.value = ''
   
   try {
+    // 2. Gọi Action từ Pinia Store
+    // Truyền username và password riêng biệt theo đúng cấu trúc Store mới
     const result = await authStore.loginUser(formData.value.username, formData.value.password)
     
     if (result.success) {
+      // Đăng nhập thành công -> Điều hướng về trang chủ
       router.push('/')
     } else {
-      errorMessage.value = result.message || 'Đăng nhập thất bại'
+      // Trường hợp hiếm khi API trả về status 200 nhưng success = false
+      errorMessage.value = result.message || 'Tên đăng nhập hoặc mật khẩu không đúng'
     }
   } catch (error) {
-    errorMessage.value = 'Có lỗi xảy ra. Vui lòng thử lại!'
+    // 3. XỬ LÝ LỖI (400, 401, 500, v.v.)
+    // Đây là nơi bắt các lỗi bắn lên từ authStore.js
+    console.error("Login catch error:", error)
+    
+    if (error.response && error.response.data) {
+      // Bóc tách message từ cấu trúc ApiResponse của bạn
+      // Thường là lỗi 401 khi sai mật khẩu
+      errorMessage.value = error.response.data.message || 'Tài khoản hoặc mật khẩu không đúng'
+    } else if (error.request) {
+      // Không nhận được phản hồi từ server
+      errorMessage.value = 'Máy chủ không phản hồi. Vui lòng kiểm tra lại kết nối!'
+    } else {
+      // Lỗi trong quá trình thiết lập request
+      errorMessage.value = 'Lỗi hệ thống: ' + error.message
+    }
   } finally {
     loading.value = false
   }
@@ -127,6 +148,13 @@ const handleLogin = async () => {
   border-radius: 4px;
   margin-bottom: 20px;
   font-size: 14px;
+  /* Thêm animation để thông báo lỗi xuất hiện mượt hơn */
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .input-group {
@@ -148,10 +176,12 @@ const handleLogin = async () => {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
+  transition: border-color 0.3s;
 }
 
 .input-group input:focus {
   border-color: #ff5000;
+  outline: none;
 }
 
 .auth-button {
@@ -186,6 +216,7 @@ const handleLogin = async () => {
 .form-footer a {
   color: #ff5000;
   font-weight: bold;
+  text-decoration: none;
 }
 
 .form-footer a:hover {

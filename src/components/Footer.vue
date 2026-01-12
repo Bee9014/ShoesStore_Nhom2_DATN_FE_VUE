@@ -3,12 +3,12 @@
     <div class="footer-content">
       <div class="footer-col about">
         <div class="logo">
-          <span class="logo-text">BITI'S HUNTER</span>
+          <span class="logo-text">SHOESSTORE</span>
         </div>
         <p class="company-name">Công ty TNHH Sản Xuất Hàng Tiêu Dùng Bình Tiên</p>
         <p>Địa chỉ: 22 Lý Thái Tổ, P.2, Q.10, TP. HCM</p>
         <p>Hotline: 0966158666 (8h - 21h30)</p>
-        <p>Email: <a href="mailto:cskh@bitis.com.vn">cskh@bitis.com.vn</a></p>
+        <p>Email: <a href="mailto:support@shoesstore.com">support@shoesstore.com</a></p>
         <div class="social-icons">
           <a href="#"><Facebook :size="24" /></a>
           <a href="#"><Instagram :size="24" /></a>
@@ -28,9 +28,9 @@
       </div>
 
       <div class="footer-col company">
-        <h4>VỀ BITI'S</h4>
+        <h4>VỀ CHÚNG TÔI</h4>
         <ul>
-          <li><a href="#">Giới thiệu về Biti's</a></li>
+          <li><a href="#">Giới thiệu về ShoesStore</a></li>
           <li><a href="#">Tin tức</a></li>
           <li><a href="#">Tuyển dụng</a></li>
           <li><a href="#">Liên hệ</a></li>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; 2025 Biti's Hunter. All rights reserved.</p>
+      <p>&copy; 2025 ShoesStore. All rights reserved.</p>
     </div>
   </footer>
 </template>

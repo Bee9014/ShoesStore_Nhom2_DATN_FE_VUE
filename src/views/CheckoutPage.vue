@@ -2,38 +2,32 @@
   <div class="checkout-page">
     <div class="checkout-container">
       <h1 class="page-title">THANH TOÁN</h1>
-      
+
       <div v-if="cartStore.items.length === 0" class="empty-message">
         <p>Giỏ hàng của bạn đang trống.</p>
         <router-link to="/" class="btn-primary">Quay lại mua sắm</router-link>
       </div>
-      
+
       <div v-else class="checkout-content">
-        
+
         <div class="checkout-form">
           <div class="form-section">
-            <h2><MapPin :size="20" /> Thông tin giao hàng</h2>
-            
+            <h2>
+              <MapPin :size="20" /> Thông tin giao hàng
+            </h2>
+
             <div class="form-group">
               <label>Họ và tên <span class="required">*</span></label>
-              <input 
-                type="text" 
-                v-model="formData.fullname" 
-                placeholder="Ví dụ: Nguyễn Văn A"
-                :class="{ 'error': errors.fullname }"
-              >
+              <input type="text" v-model="formData.fullname" placeholder="Ví dụ: Nguyễn Văn A"
+                :class="{ 'error': errors.fullname }">
               <span v-if="errors.fullname" class="error-msg">Vui lòng nhập họ tên</span>
             </div>
-            
+
             <div class="form-row">
               <div class="form-group">
                 <label>Số điện thoại <span class="required">*</span></label>
-                <input 
-                  type="tel" 
-                  v-model="formData.phone" 
-                  placeholder="Ví dụ: 0912345678"
-                  :class="{ 'error': errors.phone }"
-                >
+                <input type="tel" v-model="formData.phone" placeholder="Ví dụ: 0912345678"
+                  :class="{ 'error': errors.phone }">
                 <span v-if="errors.phone" class="error-msg">Vui lòng nhập số điện thoại</span>
               </div>
               <div class="form-group">
@@ -41,56 +35,58 @@
                 <input type="email" v-model="formData.email" placeholder="Nhập email để nhận thông báo">
               </div>
             </div>
-            
+
             <div class="form-group">
               <label>Địa chỉ nhận hàng <span class="required">*</span></label>
-              <input 
-                type="text" 
-                v-model="formData.address" 
-                placeholder="Số nhà, tên đường, phường/xã"
-                :class="{ 'error': errors.address }"
-              >
+              <input type="text" v-model="formData.address" placeholder="Số nhà, tên đường, phường/xã"
+                :class="{ 'error': errors.address }">
               <span v-if="errors.address" class="error-msg">Vui lòng nhập địa chỉ</span>
             </div>
 
             <div class="form-group">
-               <label>Tỉnh/Thành phố <span class="required">*</span></label>
-               <select v-model="formData.city" :class="{ 'error': errors.city }">
-                 <option value="">-- Chọn Tỉnh/Thành phố --</option>
-                 <option value="Hà Nội">Hà Nội</option>
-                 <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                 <option value="Đà Nẵng">Đà Nẵng</option>
-                 <option value="Hải Phòng">Hải Phòng</option>
-                 <option value="Cần Thơ">Cần Thơ</option>
-               </select>
-               <span v-if="errors.city" class="error-msg">Vui lòng chọn thành phố</span>
-           </div>
-            
+              <label>Tỉnh/Thành phố <span class="required">*</span></label>
+              <select v-model="formData.city" :class="{ 'error': errors.city }">
+                <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                <option value="Hà Nội">Hà Nội</option>
+                <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                <option value="Đà Nẵng">Đà Nẵng</option>
+                <option value="Hải Phòng">Hải Phòng</option>
+                <option value="Cần Thơ">Cần Thơ</option>
+              </select>
+              <span v-if="errors.city" class="error-msg">Vui lòng chọn thành phố</span>
+            </div>
+
             <div class="form-group">
               <label>Ghi chú</label>
               <textarea v-model="formData.note" rows="2" placeholder="Ví dụ: Giao hàng giờ hành chính"></textarea>
             </div>
           </div>
-          
+
           <div class="form-section">
-            <h2><CreditCard :size="20" /> Phương thức thanh toán</h2>
-            
+            <h2>
+              <CreditCard :size="20" /> Phương thức thanh toán
+            </h2>
+
             <div class="payment-methods">
               <label class="payment-option" :class="{ active: formData.paymentMethod === 'cod' }">
                 <input type="radio" name="payment" value="cod" v-model="formData.paymentMethod">
                 <div class="payment-content">
-                  <div class="icon-box"><Truck :size="24" /></div>
+                  <div class="icon-box">
+                    <Truck :size="24" />
+                  </div>
                   <div class="text-box">
                     <strong>Thanh toán khi nhận hàng (COD)</strong>
                     <p>Bạn chỉ phải thanh toán khi đã nhận được hàng</p>
                   </div>
                 </div>
               </label>
-              
+
               <label class="payment-option" :class="{ active: formData.paymentMethod === 'vnpay' }">
                 <input type="radio" name="payment" value="vnpay" v-model="formData.paymentMethod">
                 <div class="payment-content">
-                  <div class="icon-box"><QrCode :size="24" /></div>
+                  <div class="icon-box">
+                    <QrCode :size="24" />
+                  </div>
                   <div class="text-box">
                     <strong>Thanh toán qua VNPAY</strong>
                     <p>Quét mã QR hoặc dùng thẻ ATM nội địa / Visa</p>
@@ -100,13 +96,13 @@
             </div>
           </div>
         </div>
-        
+
         <div class="order-summary">
           <h3>Đơn hàng ({{ cartStore.cartCount }} sản phẩm)</h3>
-          
+
           <div class="order-items-list">
             <div v-for="item in cartStore.items" :key="item.variantId" class="order-item">
-               <div class="item-img">
+              <div class="item-img">
                 <img :src="getImageUrl(item.imageUrl || '/placeholder-shoe.jpg')" :alt="item.name">
                 <span class="qty-badge">{{ item.quantity }}</span>
               </div>
@@ -119,9 +115,9 @@
               </div>
             </div>
           </div>
-          
+
           <div class="divider"></div>
-          
+
           <div class="cost-row">
             <span>Tạm tính</span>
             <span>{{ formatPrice(cartStore.cartTotal) }}</span>
@@ -130,21 +126,21 @@
             <span>Phí vận chuyển</span>
             <span>{{ formatPrice(shippingFee) }}</span>
           </div>
-          
+
           <div class="divider"></div>
-          
+
           <div class="cost-row total">
             <span>Tổng cộng</span>
             <span class="total-price">{{ formatPrice(totalAmount) }}</span>
           </div>
-          
+
           <button class="btn-checkout" @click="handlePlaceOrder" :disabled="loading">
             <span v-if="loading" class="spinner"></span>
             <span v-else>
               {{ formData.paymentMethod === 'vnpay' ? 'THANH TOÁN VNPAY' : 'ĐẶT HÀNG NGAY' }}
             </span>
           </button>
-          
+
           <router-link to="/cart" class="link-back">← Quay lại giỏ hàng</router-link>
         </div>
       </div>
@@ -163,7 +159,7 @@ import { useCartStore } from '../stores/cartStore'
 import { useAuthStore } from '../stores/authStore'
 
 // Import API
-import { createOrder } from '../api/order' 
+import { createOrder } from '../api/order'
 import { createVNPayPayment } from '../api/payment' // Import hàm thanh toán
 
 const router = useRouter()
@@ -181,7 +177,7 @@ const errors = reactive({
 })
 
 const formData = reactive({
-  fullname: authStore.user?.fullname || '',
+  fullname: authStore.user?.fullName || '',
   phone: authStore.user?.phone || '',
   email: authStore.user?.email || '',
   address: '',
@@ -215,7 +211,7 @@ const validateForm = () => {
 const handlePlaceOrder = async () => {
   // 1. Validate Form
   if (!validateForm()) return
-  
+
   // 2. Check Auth
   if (!authStore.user?.userId) {
     alert('Vui lòng đăng nhập để tiếp tục!')
@@ -228,12 +224,11 @@ const handlePlaceOrder = async () => {
   try {
     // --- BƯỚC 1: TẠO ĐƠN HÀNG (PENDING) ---
     const orderPayload = {
-      buyerId: authStore.user.userId,
+      userId: authStore.user?.userId,
       shippingFullname: formData.fullname,
       shippingPhone: formData.phone,
       shippingAddress: `${formData.address}, ${formData.city}`,
       shippingCity: formData.city,
-      shippingCountry: 'Vietnam',
       note: formData.note,
       shippingFee: shippingFee.value,
       paymentMethod: formData.paymentMethod.toUpperCase(),
@@ -250,7 +245,7 @@ const handlePlaceOrder = async () => {
     // orderRes có thể là { success: true, ... } hoặc { data: { success: true... } }
     // Tùy vào cách viết api/order.js của bạn. 
     // Mình giả định api/order.js cũng đã trả về response.data như api/payment.js
-    
+
     // Kiểm tra cấu trúc response (cho chắc chắn)
     const orderData = orderRes.success ? orderRes : orderRes.data;
 
@@ -258,13 +253,13 @@ const handlePlaceOrder = async () => {
       const orderId = orderData.data.orderId
 
       // --- BƯỚC 2: XỬ LÝ THANH TOÁN ---
-      
+
       // CASE 1: COD
       if (formData.paymentMethod === 'cod') {
         cartStore.clearCart()
         router.push(`/orders/${orderId}/success`)
-      
-      // CASE 2: VNPAY
+
+        // CASE 2: VNPAY
       } else if (formData.paymentMethod === 'vnpay') {
         try {
           const vnpayPayload = {
@@ -277,7 +272,7 @@ const handlePlaceOrder = async () => {
           }
 
           // Gọi API (đã được bóc .data trong file api/payment.js)
-          const resData = await createVNPayPayment(vnpayPayload) 
+          const resData = await createVNPayPayment(vnpayPayload)
 
           // Logic kiểm tra trực tiếp
           if (resData.success && resData.data.paymentUrl) {
@@ -350,7 +345,7 @@ const handlePlaceOrder = async () => {
   padding: 24px;
   border-radius: 12px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .form-section h2 {
@@ -381,9 +376,13 @@ label {
   color: #4b5563;
 }
 
-.required { color: #ef4444; }
+.required {
+  color: #ef4444;
+}
 
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #d1d5db;
@@ -392,13 +391,16 @@ input, select, textarea {
   transition: border-color 0.2s;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: #ff5000;
   box-shadow: 0 0 0 3px rgba(255, 80, 0, 0.1);
 }
 
-input.error, select.error {
+input.error,
+select.error {
   border-color: #ef4444;
 }
 
@@ -425,7 +427,9 @@ input.error, select.error {
   position: relative;
 }
 
-.payment-option:hover { border-color: #fdba74; }
+.payment-option:hover {
+  border-color: #fdba74;
+}
 
 .payment-option.active {
   border-color: #ff5000;
@@ -450,15 +454,24 @@ input.error, select.error {
   margin-top: 2px;
 }
 
-.text-box strong { display: block; color: #111; font-size: 15px; }
-.text-box p { font-size: 13px; color: #6b7280; margin: 4px 0 0; }
+.text-box strong {
+  display: block;
+  color: #111;
+  font-size: 15px;
+}
+
+.text-box p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0 0;
+}
 
 /* Tóm tắt đơn hàng bên phải */
 .order-summary {
   background: white;
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   height: fit-content;
   position: sticky;
   top: 20px;
@@ -494,25 +507,54 @@ input.error, select.error {
   border: 1px solid #eee;
 }
 
-.item-img img { width: 100%; height: 100%; object-fit: cover; }
+.item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .qty-badge {
   position: absolute;
-  top: 0; right: 0;
-  background: rgba(0,0,0,0.6);
+  top: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   font-size: 10px;
   padding: 2px 6px;
   border-bottom-left-radius: 6px;
 }
 
-.item-details { flex: 1; }
-.item-details .name { font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.item-details .variant { font-size: 12px; color: #9ca3af; }
+.item-details {
+  flex: 1;
+}
 
-.item-price { font-size: 14px; font-weight: 600; color: #111; }
+.item-details .name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-.divider { height: 1px; background: #e5e7eb; margin: 16px 0; }
+.item-details .variant {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.item-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 16px 0;
+}
 
 .cost-row {
   display: flex;
@@ -529,7 +571,9 @@ input.error, select.error {
   margin-top: 10px;
 }
 
-.total-price { color: #ff5000; }
+.total-price {
+  color: #ff5000;
+}
 
 .btn-checkout {
   width: 100%;
@@ -545,8 +589,14 @@ input.error, select.error {
   transition: background 0.2s;
 }
 
-.btn-checkout:hover:not(:disabled) { background: #ea580c; }
-.btn-checkout:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-checkout:hover:not(:disabled) {
+  background: #ea580c;
+}
+
+.btn-checkout:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 
 .link-back {
   display: block;
@@ -556,23 +606,42 @@ input.error, select.error {
   font-size: 13px;
   text-decoration: none;
 }
-.link-back:hover { color: #ff5000; text-decoration: underline; }
+
+.link-back:hover {
+  color: #ff5000;
+  text-decoration: underline;
+}
 
 .spinner {
   display: inline-block;
-  width: 20px; height: 20px;
+  width: 20px;
+  height: 20px;
   border: 2px solid #fff;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* Responsive Mobile */
 @media (max-width: 768px) {
-  .checkout-content { grid-template-columns: 1fr; }
-  .order-summary { position: static; order: -1; margin-bottom: 20px; }
-  .form-row { grid-template-columns: 1fr; }
+  .checkout-content {
+    grid-template-columns: 1fr;
+  }
+
+  .order-summary {
+    position: static;
+    order: -1;
+    margin-bottom: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

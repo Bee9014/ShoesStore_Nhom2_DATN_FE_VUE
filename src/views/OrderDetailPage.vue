@@ -224,7 +224,7 @@ const fetchOrderDetail = async () => {
     const response = await getOrderDetail(orderId)
     
     if (response.success) {
-      order.value = response.data.order
+      order.value = response.data
       orderItems.value = response.data.items || []
     } else {
       error.value = response.message || 'Không thể tải thông tin đơn hàng'

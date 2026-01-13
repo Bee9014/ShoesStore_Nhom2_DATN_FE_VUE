@@ -2,7 +2,7 @@
   <div class="cart-page">
     <div class="cart-container">
       <h1 class="page-title">GIỎ HÀNG CỦA BẠN</h1>
-      
+
       <!-- Empty Cart -->
       <div v-if="cartStore.items.length === 0" class="empty-cart">
         <ShoppingCart :size="80" class="empty-icon" />
@@ -12,7 +12,7 @@
           Tiếp tục mua sắm
         </router-link>
       </div>
-      
+
       <!-- Cart Items -->
       <div v-else class="cart-content">
         <div class="cart-items">
@@ -23,57 +23,49 @@
             <span>Tổng tiền</span>
             <span></span>
           </div>
-          
-          <CartItem 
-            v-for="item in cartStore.items" 
-            :key="item.variantId"
-            :item="item"
-          />
+
+          <CartItem v-for="item in cartStore.items" :key="item.variantId" :item="item" />
         </div>
-        
+
         <!-- Cart Summary -->
         <div class="cart-summary">
           <h3>Tóm tắt đơn hàng</h3>
-          
+
           <div class="summary-row">
             <span>Tạm tính ({{ cartStore.cartCount }} sản phẩm):</span>
             <span class="amount">{{ formatPrice(cartStore.cartTotal) }}</span>
           </div>
-          
+
           <div class="summary-row">
             <span>Phí vận chuyển:</span>
             <span class="amount">{{ formatPrice(shippingFee) }}</span>
           </div>
-          
+
           <div class="summary-row discount">
             <span>Giảm giá:</span>
             <span class="amount discount-amount">-{{ formatPrice(discount) }}</span>
           </div>
-          
+
           <div class="divider"></div>
-          
+
           <div class="summary-row total">
             <span>Tổng cộng:</span>
             <span class="amount">{{ formatPrice(totalAmount) }}</span>
           </div>
-          
+
           <div class="voucher-input">
-            <input 
-              type="text" 
-              placeholder="Nhập mã giảm giá"
-              v-model="voucherCode"
-            >
+            <input type="text" placeholder="Nhập mã giảm giá" v-model="voucherCode">
             <button class="apply-btn" @click="applyVoucher">Áp dụng</button>
           </div>
-          
+
           <router-link to="/checkout" class="checkout-btn">
             THANH TOÁN
           </router-link>
-          
+
           <router-link to="/" class="continue-shopping">
             ← Tiếp tục mua sắm
           </router-link>
-          
+
           <button class="clear-cart-btn" @click="clearCart">
             Xóa toàn bộ giỏ hàng
           </button>
@@ -342,11 +334,11 @@ const clearCart = () => {
   .cart-content {
     grid-template-columns: 1fr;
   }
-  
+
   .cart-header {
     display: none;
   }
-  
+
   .cart-summary {
     position: static;
   }

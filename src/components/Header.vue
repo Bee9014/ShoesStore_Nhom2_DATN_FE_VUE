@@ -15,14 +15,14 @@
         </template>
       </div>
     </div>
-    
+
     <nav class="main-nav">
       <div class="logo">
         <router-link to="/">
           <span class="logo-text">SHOESSTORE</span>
         </router-link>
       </div>
-      
+
       <ul class="nav-links">
         <li><router-link to="/">TRANG CHỦ</router-link></li>
         <li><router-link to="/products">SẢN PHẨM</router-link></li>
@@ -35,14 +35,9 @@
         <li><a href="#">BÉ GÁI</a></li>
         <li><a href="#">PHỤ KIỆN</a></li>
       </ul>
-      
+
       <div class="nav-icons">
-        <input 
-          type="text" 
-          placeholder="Tìm kiếm..." 
-          v-model="searchQuery" 
-          @keyup.enter="handleSearch"
-        >
+        <input type="text" placeholder="Tìm kiếm..." v-model="searchQuery" @keyup.enter="handleSearch">
         <Search :size="20" @click="handleSearch" style="cursor: pointer" />
         <router-link to="/orders" class="icon-link" v-if="authStore.isAuthenticated" title="Đơn hàng của tôi">
           <Package :size="20" />
@@ -72,12 +67,12 @@ const cartStore = useCartStore()
 const searchQuery = ref('')
 
 const handleSearch = () => {
-  const keyword = searchQuery.value.trim()
-  if (keyword) {
+  const title = searchQuery.value.trim()
+  if (title) {
     // Redirect to products page with search query
     router.push({
       path: '/products',
-      query: { search: keyword }
+      query: { search: title }
     })
     // Clear search input
     searchQuery.value = ''

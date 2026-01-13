@@ -41,6 +41,29 @@
           </span>
         </div>
 
+        <div class="input-group" :class="{ 'has-error': hasError('birthday') }">
+          <label for="birthday">Ngày sinh</label>
+          <input type="date" id="birthday" v-model="formData.birthday" @input="clearFieldError('birthday')">
+          <span v-if="hasError('birthday')" class="field-error">
+            {{ getError('birthday') }}
+          </span>
+        </div>
+
+        <div class="input-group" :class="{ 'has-error': hasError('gender') }">
+          <label>Giới tính</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" v-model="formData.gender" :value="1"> Nam
+            </label>
+            <label class="radio-label">
+              <input type="radio" v-model="formData.gender" :value="0"> Nữ
+            </label>
+          </div>
+          <span v-if="hasError('gender')" class="field-error">
+            {{ getError('gender') }}
+          </span>
+        </div>
+
         <div class="input-group" :class="{ 'has-error': hasError('phone') }">
           <label for="phone">Số điện thoại</label>
           <input type="tel" id="phone" v-model="formData.phone" @input="clearFieldError('phone')"
@@ -99,6 +122,8 @@ const { errors, clearErrors, clearFieldError, hasError, getError, handleApiError
 const formData = ref({
   username: '',
   fullName: '', // Đã đổi từ fullname -> fullName cho khớp Backend
+  gender: 1,
+  birthday: '',
   email: '',
   phone: '',
   password: '',
@@ -114,14 +139,14 @@ const handleRegister = async () => {
   errorMessage.value = ''
   successMessage.value = ''
   clearErrors()
-   // Validation phía Client
+  // Validation phía Client
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,6}$/;
   if (!emailPattern.test(formData.value.email)) {
     errorMessage.value = 'Email không hợp lệ! Vui lòng kiểm tra lại đuôi email (ví dụ: .com, .vn)'
     return
   }
 
- 
+
   if (formData.value.password !== formData.value.confirmPassword) {
     errorMessage.value = 'Mật khẩu xác nhận không khớp!'
     return
@@ -138,6 +163,8 @@ const handleRegister = async () => {
     const result = await authStore.registerUser({
       username: formData.value.username,
       fullName: formData.value.fullName, // Đồng bộ key với DTO
+      gender: formData.value.gender,
+      birthday: formData.value.birthday,
       email: formData.value.email,
       phone: formData.value.phone,
       password: formData.value.password,
@@ -298,5 +325,23 @@ const handleRegister = async () => {
   color: #ff5000;
   font-weight: bold;
   text-decoration: none;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  padding: 8px 0;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.radio-label input {
+  width: auto;
+  margin-right: 8px;
 }
 </style>

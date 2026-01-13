@@ -1,180 +1,258 @@
 <template>
   <div class="checkout-page">
     <div class="checkout-container">
-      <h1 class="page-title">THANH TOÁN</h1>
 
-      <div v-if="cartStore.items.length === 0" class="empty-message">
-        <p>Giỏ hàng của bạn đang trống.</p>
-        <router-link to="/" class="btn-primary">Quay lại mua sắm</router-link>
+      <div v-if="cartStore.items.length === 0" class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <h2>Giỏ hàng trống</h2>
+        <p>Hãy chọn thêm sản phẩm để tiến hành thanh toán nhé.</p>
+        <router-link to="/" class="btn-primary">Tiếp tục mua sắm</router-link>
       </div>
 
-      <div v-else class="checkout-content">
+      <div v-else class="checkout-layout">
 
-        <div class="checkout-form">
-          <div class="form-section">
-            <h2>
-              <MapPin :size="20" /> Thông tin giao hàng
+        <div class="checkout-left">
+          <h1 class="page-title">Thanh toán</h1>
+
+          <div class="card-section">
+            <h2 class="section-title">
+              <div class="icon-circle">
+                <MapPin :size="18" />
+              </div>
+              Thông tin giao hàng
             </h2>
 
-            <div class="form-group">
-              <label>Họ và tên <span class="required">*</span></label>
-              <input type="text" v-model="formData.fullname" placeholder="Ví dụ: Nguyễn Văn A"
-                :class="{ 'error': errors.fullname }">
-              <span v-if="errors.fullname" class="error-msg">Vui lòng nhập họ tên</span>
-            </div>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label>Họ và tên <span class="req">*</span></label>
+                <input type="text" v-model="formData.fullname" placeholder="Nhập họ tên người nhận"
+                  :class="{ 'error': errors.fullname }">
+                <small v-if="errors.fullname" class="err-text">Vui lòng nhập họ tên</small>
+              </div>
 
-            <div class="form-row">
               <div class="form-group">
-                <label>Số điện thoại <span class="required">*</span></label>
+                <label>Số điện thoại <span class="req">*</span></label>
                 <input type="tel" v-model="formData.phone" placeholder="Ví dụ: 0912345678"
                   :class="{ 'error': errors.phone }">
-                <span v-if="errors.phone" class="error-msg">Vui lòng nhập số điện thoại</span>
+                <small v-if="errors.phone" class="err-text">Nhập SĐT hợp lệ</small>
               </div>
+
               <div class="form-group">
-                <label>Email</label>
-                <input type="email" v-model="formData.email" placeholder="Nhập email để nhận thông báo">
+                <label>Email (Tùy chọn)</label>
+                <input type="email" v-model="formData.email" placeholder="Nhập email nhận hóa đơn">
               </div>
-            </div>
 
-            <div class="form-group">
-              <label>Địa chỉ nhận hàng <span class="required">*</span></label>
-              <input type="text" v-model="formData.address" placeholder="Số nhà, tên đường, phường/xã"
-                :class="{ 'error': errors.address }">
-              <span v-if="errors.address" class="error-msg">Vui lòng nhập địa chỉ</span>
-            </div>
+              <div class="form-group full-width">
+                <label>Địa chỉ cụ thể <span class="req">*</span></label>
+                <input type="text" v-model="formData.address" placeholder="Số nhà, ngõ, tên đường..."
+                  :class="{ 'error': errors.address }">
+                <small v-if="errors.address" class="err-text">Vui lòng nhập địa chỉ</small>
+              </div>
 
-            <div class="form-group">
-              <label>Tỉnh/Thành phố <span class="required">*</span></label>
-              <select v-model="formData.city" :class="{ 'error': errors.city }">
-                <option value="">-- Chọn Tỉnh/Thành phố --</option>
-                <option value="Hà Nội">Hà Nội</option>
-                <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                <option value="Đà Nẵng">Đà Nẵng</option>
-                <option value="Hải Phòng">Hải Phòng</option>
-                <option value="Cần Thơ">Cần Thơ</option>
-              </select>
-              <span v-if="errors.city" class="error-msg">Vui lòng chọn thành phố</span>
-            </div>
+              <div class="form-group full-width">
+                <label>Tỉnh/Thành phố <span class="req">*</span></label>
+                <div class="select-wrapper">
+                  <select v-model="formData.city" :class="{ 'error': errors.city }">
+                    <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                    <option value="Hải Phòng">Hải Phòng</option>
+                    <option value="Cần Thơ">Cần Thơ</option>
+                  </select>
+                </div>
+                <small v-if="errors.city" class="err-text">Vui lòng chọn thành phố</small>
+              </div>
 
-            <div class="form-group">
-              <label>Ghi chú</label>
-              <textarea v-model="formData.note" rows="2" placeholder="Ví dụ: Giao hàng giờ hành chính"></textarea>
+              <div class="form-group full-width">
+                <label>Ghi chú đơn hàng</label>
+                <textarea v-model="formData.note" rows="2"
+                  placeholder="Ví dụ: Gọi trước khi giao, giao giờ hành chính..."></textarea>
+              </div>
             </div>
           </div>
 
-          <div class="form-section">
-            <h2>
-              <CreditCard :size="20" /> Phương thức thanh toán
+          <div class="card-section">
+            <h2 class="section-title">
+              <div class="icon-circle">
+                <CreditCard :size="18" />
+              </div>
+              Phương thức thanh toán
             </h2>
 
-            <div class="payment-methods">
-              <label class="payment-option" :class="{ active: formData.paymentMethod === 'cod' }">
+            <div class="payment-grid">
+              <label class="payment-card" :class="{ active: formData.paymentMethod === 'cod' }">
                 <input type="radio" name="payment" value="cod" v-model="formData.paymentMethod">
-                <div class="payment-content">
-                  <div class="icon-box">
-                    <Truck :size="24" />
-                  </div>
-                  <div class="text-box">
-                    <strong>Thanh toán khi nhận hàng (COD)</strong>
-                    <p>Bạn chỉ phải thanh toán khi đã nhận được hàng</p>
-                  </div>
+                <div class="pay-icon">
+                  <Truck :size="24" />
                 </div>
+                <div class="pay-info">
+                  <strong>COD</strong>
+                  <span>Thanh toán khi nhận hàng</span>
+                </div>
+                <div class="check-mark" v-if="formData.paymentMethod === 'cod'">✔</div>
               </label>
 
-              <label class="payment-option" :class="{ active: formData.paymentMethod === 'vnpay' }">
+              <label class="payment-card" :class="{ active: formData.paymentMethod === 'vnpay' }">
                 <input type="radio" name="payment" value="vnpay" v-model="formData.paymentMethod">
-                <div class="payment-content">
-                  <div class="icon-box">
-                    <QrCode :size="24" />
-                  </div>
-                  <div class="text-box">
-                    <strong>Thanh toán qua VNPAY</strong>
-                    <p>Quét mã QR hoặc dùng thẻ ATM nội địa / Visa</p>
-                  </div>
+                <div class="pay-icon">
+                  <QrCode :size="24" />
                 </div>
+                <div class="pay-info">
+                  <strong>VNPAY</strong>
+                  <span>Ví điện tử / Thẻ ATM</span>
+                </div>
+                <div class="check-mark" v-if="formData.paymentMethod === 'vnpay'">✔</div>
               </label>
             </div>
+          </div>
+
+          <router-link to="/cart" class="back-link mobile-only">← Quay lại giỏ hàng</router-link>
+        </div>
+
+        <div class="checkout-right">
+          <div class="summary-card">
+            <h3>Đơn hàng ({{ cartStore.cartCount }})</h3>
+
+            <div class="summary-items">
+              <div v-for="item in cartStore.items" :key="item.variantId" class="s-item">
+                <div class="s-img">
+                  <img :src="getImageUrl(item.imageUrl || '/placeholder-shoe.jpg')" :alt="item.name">
+                  <span class="s-qty">{{ item.quantity }}</span>
+                </div>
+                <div class="s-info">
+                  <div class="s-name">{{ item.name }}</div>
+                  <div class="s-meta">{{ item.size }} / {{ item.color }}</div>
+                </div>
+                <div class="s-price">
+                  <div v-if="appliedVoucher" class="price-col">
+                    <span class="old">{{ formatPrice(item.price * item.quantity) }}</span>
+                    <span class="new">{{ formatPrice(getLineItemPrice(item)) }}</span>
+                  </div>
+                  <div v-else>{{ formatPrice(item.price * item.quantity) }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="voucher-wrapper">
+              <div v-if="!appliedVoucher" class="voucher-input-group">
+                <div class="icon">
+                  <Ticket :size="16" />
+                </div>
+                <button class="btn-trigger-voucher" @click="openVoucherModal">Chọn hoặc nhập mã ưu đãi</button>
+              </div>
+
+              <div v-else class="voucher-applied">
+                <div class="va-left">
+                  <Ticket :size="16" class="va-icon" />
+                  <span class="va-code">{{ appliedVoucher.code }}</span>
+                </div>
+                <button class="btn-remove-voucher" @click="removeVoucher">Gỡ bỏ</button>
+              </div>
+              <div v-if="appliedVoucher" class="va-success-text">
+                Đã áp dụng mã giảm giá
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="calc-row">
+              <span>Tạm tính</span>
+              <span>{{ formatPrice(cartStore.cartTotal) }}</span>
+            </div>
+            <div class="calc-row">
+              <span>Phí vận chuyển</span>
+              <span>{{ formatPrice(shippingFee) }}</span>
+            </div>
+            <div class="calc-row discount" v-if="appliedVoucher">
+              <span>Giảm giá</span>
+              <span>-{{ formatPrice(discountAmount) }}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="total-row">
+              <span>Tổng cộng</span>
+              <span class="total-amount">{{ formatPrice(totalAmount) }}</span>
+            </div>
+
+            <button class="btn-place-order" @click="handlePlaceOrder" :disabled="loading">
+              <span v-if="loading" class="spinner"></span>
+              <span v-else>
+                {{ formData.paymentMethod === 'vnpay' ? 'THANH TOÁN VNPAY' : 'ĐẶT HÀNG' }}
+              </span>
+            </button>
+
+            <router-link to="/cart" class="back-link desktop-only">← Quay lại giỏ hàng</router-link>
           </div>
         </div>
 
-        <div class="order-summary">
-          <h3>Đơn hàng ({{ cartStore.cartCount }} sản phẩm)</h3>
+      </div>
+    </div>
 
-          <div class="order-items-list">
-            <div v-for="item in cartStore.items" :key="item.variantId" class="order-item">
-              <div class="item-img">
-                <img :src="getImageUrl(item.imageUrl || '/placeholder-shoe.jpg')" :alt="item.name">
-                <span class="qty-badge">{{ item.quantity }}</span>
+    <div v-if="showVoucherModal" class="modal-backdrop" @click="showVoucherModal = false">
+      <div class="modal-panel" @click.stop>
+        <div class="modal-head">
+          <h3>ShoeStore Voucher</h3>
+          <button @click="showVoucherModal = false">
+            <X :size="24" />
+          </button>
+        </div>
+
+        <div class="modal-search-bar">
+          <input type="text" v-model="voucherCode" placeholder="Nhập mã voucher" @keyup.enter="handleApplyVoucher">
+          <button @click="handleApplyVoucher" :disabled="!voucherCode">ÁP DỤNG</button>
+        </div>
+
+        <div class="modal-body-scroll">
+          <div v-if="voucherList.length === 0" class="empty-list">
+            Không có mã giảm giá khả dụng.
+          </div>
+
+          <div v-else class="ticket-list">
+            <div v-for="v in voucherList" :key="v.voucherId" class="ticket" :class="{ 'disabled': !v.eligible }"
+              @click="selectFromList(v)">
+              <div class="ticket-stub">
+                <Ticket :size="24" color="white" />
               </div>
-              <div class="item-details">
-                <p class="name">{{ item.name }}</p>
-                <p class="variant">Size: {{ item.size }} • {{ item.color }}</p>
+              <div class="ticket-content">
+                <div class="tc-code">{{ v.code }}</div>
+                <div class="tc-desc">{{ v.description }}</div>
+                <div class="tc-meta">
+                  <span v-if="!v.eligible" class="tc-reason">{{ v.reason }}</span>
+                  <span v-else class="tc-valid">HSD: {{ new Date(v.endDate).toLocaleDateString('vi-VN') }}</span>
+                </div>
               </div>
-              <div class="item-price">
-                {{ formatPrice(item.price * item.quantity) }}
+              <div class="ticket-radio">
+                <div class="radio-circle"></div>
               </div>
             </div>
           </div>
-
-          <div class="divider"></div>
-
-          <div class="cost-row">
-            <span>Tạm tính</span>
-            <span>{{ formatPrice(cartStore.cartTotal) }}</span>
-          </div>
-          <div class="cost-row">
-            <span>Phí vận chuyển</span>
-            <span>{{ formatPrice(shippingFee) }}</span>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="cost-row total">
-            <span>Tổng cộng</span>
-            <span class="total-price">{{ formatPrice(totalAmount) }}</span>
-          </div>
-
-          <button class="btn-checkout" @click="handlePlaceOrder" :disabled="loading">
-            <span v-if="loading" class="spinner"></span>
-            <span v-else>
-              {{ formData.paymentMethod === 'vnpay' ? 'THANH TOÁN VNPAY' : 'ĐẶT HÀNG NGAY' }}
-            </span>
-          </button>
-
-          <router-link to="/cart" class="link-back">← Quay lại giỏ hàng</router-link>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { Truck, CreditCard, QrCode, MapPin } from 'lucide-vue-next'
+import { Truck, CreditCard, QrCode, MapPin, Ticket, X } from 'lucide-vue-next'
 import { getImageUrl } from '@/helpers/userHelper'
-
-// Import Stores
 import { useCartStore } from '../stores/cartStore'
 import { useAuthStore } from '../stores/authStore'
-
-// Import API
 import { createOrder } from '../api/order'
-import { createVNPayPayment } from '../api/payment' // Import hàm thanh toán
+import { createVNPayPayment } from '../api/payment'
+import { applyVoucher, getValidVouchers } from '../api/voucher'
 
 const router = useRouter()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
 
-// State
 const loading = ref(false)
 const shippingFee = ref(30000)
-const errors = reactive({
-  fullname: false,
-  phone: false,
-  address: false,
-  city: false
-})
+const errors = reactive({ fullname: false, phone: false, address: false, city: false })
 
 const formData = reactive({
   fullname: authStore.user?.fullName || '',
@@ -183,46 +261,73 @@ const formData = reactive({
   address: '',
   city: '',
   note: '',
-  paymentMethod: 'cod', // Mặc định chọn COD
+  paymentMethod: 'cod',
 })
 
-// Computed
-const totalAmount = computed(() => cartStore.cartTotal + shippingFee.value)
+// Voucher State
+const voucherCode = ref('')
+const appliedVoucher = ref(null)
+const showVoucherModal = ref(false)
+const voucherList = ref([])
 
-// Helper: Format tiền tệ
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
+// Computed
+const discountAmount = computed(() => appliedVoucher.value ? appliedVoucher.value.discountAmount : 0)
+const totalAmount = computed(() => {
+  const total = cartStore.cartTotal + shippingFee.value - discountAmount.value
+  return total > 0 ? total : 0
+})
+
+const formatPrice = (price) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
+
+const getLineItemPrice = (item) => {
+  const originalTotal = item.price * item.quantity;
+  if (!appliedVoucher.value || !cartStore.cartTotal) return originalTotal;
+  const ratio = appliedVoucher.value.discountAmount / cartStore.cartTotal;
+  return originalTotal - (originalTotal * ratio);
 }
 
-// Helper: Validate Form
 const validateForm = () => {
   let isValid = true
   Object.keys(errors).forEach(key => errors[key] = false)
-
   if (!formData.fullname.trim()) { errors.fullname = true; isValid = false }
   if (!formData.phone.trim()) { errors.phone = true; isValid = false }
   if (!formData.address.trim()) { errors.address = true; isValid = false }
   if (!formData.city) { errors.city = true; isValid = false }
-
   return isValid
 }
 
-// --- LOGIC ĐẶT HÀNG CHÍNH ---
+const handleApplyVoucher = async () => {
+  if (!voucherCode.value) return alert('Vui lòng nhập mã voucher');
+  if (!authStore.user?.userId) return alert('Vui lòng đăng nhập');
+  try {
+    const res = await applyVoucher({ code: voucherCode.value, total: cartStore.cartTotal, userId: authStore.user?.userId })
+    if (res.success) { appliedVoucher.value = res.data; showVoucherModal.value = false; }
+    else { alert(res.message); appliedVoucher.value = null; }
+  } catch (e) { alert(e.response?.data?.message || 'Mã không hợp lệ'); }
+}
+
+const removeVoucher = () => { appliedVoucher.value = null; voucherCode.value = ''; }
+
+const openVoucherModal = async () => {
+  showVoucherModal.value = true;
+  try {
+    const res = await getValidVouchers(cartStore.cartTotal);
+    if (res.success) voucherList.value = res.data;
+  } catch (e) { console.error(e); }
+}
+
+const selectFromList = (v) => {
+  if (!v.eligible) return;
+  voucherCode.value = v.code;
+  handleApplyVoucher();
+}
+
 const handlePlaceOrder = async () => {
-  // 1. Validate Form
   if (!validateForm()) return
-
-  // 2. Check Auth
-  if (!authStore.user?.userId) {
-    alert('Vui lòng đăng nhập để tiếp tục!')
-    router.push('/login')
-    return
-  }
-
+  if (!authStore.user?.userId) return router.push('/login')
   loading.value = true
 
   try {
-    // --- BƯỚC 1: TẠO ĐƠN HÀNG (PENDING) ---
     const orderPayload = {
       userId: authStore.user?.userId,
       shippingFullname: formData.fullname,
@@ -232,416 +337,626 @@ const handlePlaceOrder = async () => {
       note: formData.note,
       shippingFee: shippingFee.value,
       paymentMethod: formData.paymentMethod.toUpperCase(),
-      items: cartStore.items.map(item => ({
-        variantId: item.variantId,
-        quantity: item.quantity,
-        price: item.price
-      }))
+      voucherId: appliedVoucher.value?.voucherId || null,
+      items: cartStore.items.map(item => ({ variantId: item.variantId, quantity: item.quantity, price: item.price }))
     }
 
-    // Gọi API tạo đơn hàng
     const orderRes = await createOrder(orderPayload)
-
-    // orderRes có thể là { success: true, ... } hoặc { data: { success: true... } }
-    // Tùy vào cách viết api/order.js của bạn. 
-    // Mình giả định api/order.js cũng đã trả về response.data như api/payment.js
-
-    // Kiểm tra cấu trúc response (cho chắc chắn)
     const orderData = orderRes.success ? orderRes : orderRes.data;
 
     if (orderData && orderData.success) {
       const orderId = orderData.data.orderId
-
-      // --- BƯỚC 2: XỬ LÝ THANH TOÁN ---
-
-      // CASE 1: COD
       if (formData.paymentMethod === 'cod') {
         cartStore.clearCart()
         router.push(`/orders/${orderId}/success`)
-
-        // CASE 2: VNPAY
       } else if (formData.paymentMethod === 'vnpay') {
-        try {
-          const vnpayPayload = {
-            orderId: orderId,
-            amount: totalAmount.value,
-            // Tự động lấy domain hiện tại
-            returnUrl: window.location.origin + '/shoestore/payment-result',
-            orderInfo: `Thanh toán đơn hàng #${orderId}`,
-            payerId: authStore.user.userId
-          }
-
-          // Gọi API (đã được bóc .data trong file api/payment.js)
-          const resData = await createVNPayPayment(vnpayPayload)
-
-          // Logic kiểm tra trực tiếp
-          if (resData.success && resData.data.paymentUrl) {
-            // Chuyển hướng sang VNPay
-            window.location.href = resData.data.paymentUrl
-          } else {
-            alert('Lỗi tạo cổng thanh toán: ' + (resData.message || 'Unknown error'))
-            loading.value = false
-          }
-        } catch (vnpayError) {
-          console.error('VNPay Error:', vnpayError)
-          alert('Không thể kết nối đến cổng thanh toán VNPay.')
-          loading.value = false
+        const vnpayPayload = {
+          orderId: orderId,
+          amount: totalAmount.value,
+          returnUrl: window.location.origin + '/shoestore/payment-result',
+          orderInfo: `Thanh toán đơn hàng #${orderId}`,
+          payerId: authStore.user.userId
+        }
+        const resData = await createVNPayPayment(vnpayPayload)
+        if (resData.success && resData.data.paymentUrl) {
+          window.location.href = resData.data.paymentUrl
+        } else {
+          alert('Lỗi tạo cổng thanh toán VNPay'); loading.value = false
         }
       }
-
     } else {
-      alert('Đặt hàng thất bại: ' + (orderData.message || 'Lỗi không xác định'))
-      loading.value = false
+      alert(orderData.message || 'Lỗi tạo đơn'); loading.value = false
     }
-
   } catch (error) {
-    console.error('System Error:', error)
-    alert('Có lỗi xảy ra trong quá trình xử lý.')
-    loading.value = false
+    console.error(error); alert('Lỗi hệ thống'); loading.value = false
   }
 }
 </script>
 
 <style scoped>
+/* GENERAL LAYOUT */
 .checkout-page {
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
+  /* Lighter cleaner gray */
   min-height: 100vh;
   padding: 40px 0;
   font-family: 'Inter', sans-serif;
+  color: #1e293b;
 }
 
 .checkout-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 .page-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
-  color: #111;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  text-align: center;
+  margin-bottom: 24px;
+  color: #0f172a;
 }
 
-.empty-message {
+.empty-state {
   text-align: center;
-  padding: 60px;
+  padding: 80px 20px;
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Layout 2 cột */
-.checkout-content {
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* LAYOUT GRID */
+.checkout-layout {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 30px;
+  grid-template-columns: 1.6fr 1fr;
+  /* Left wider */
+  gap: 32px;
+  align-items: start;
 }
 
-/* Form bên trái */
-.form-section {
+/* CARDS STYLING */
+.card-section,
+.summary-card {
   background: white;
-  padding: 24px;
   border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border: 1px solid #f1f5f9;
 }
 
-.form-section h2 {
+.section-title {
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: #333;
+  gap: 12px;
 }
 
-.form-group {
-  margin-bottom: 16px;
+.icon-circle {
+  width: 32px;
+  height: 32px;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff5000;
 }
 
-.form-row {
+/* FORM ELEMENTS */
+.form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 16px;
 }
 
-label {
+.full-width {
+  grid-column: span 2;
+}
+
+.form-group label {
   display: block;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: #4b5563;
+  color: #475569;
 }
 
-.required {
+.req {
   color: #ef4444;
 }
 
-input,
-select,
-textarea {
+.form-group input,
+.form-group textarea,
+.select-wrapper select {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   font-size: 14px;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  background: #fff;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
+.form-group input:focus,
+.form-group textarea:focus,
+.select-wrapper select:focus {
   border-color: #ff5000;
+  outline: none;
   box-shadow: 0 0 0 3px rgba(255, 80, 0, 0.1);
 }
 
-input.error,
-select.error {
-  border-color: #ef4444;
-}
-
-.error-msg {
-  font-size: 12px;
+.err-text {
+  font-size: 11px;
   color: #ef4444;
   margin-top: 4px;
   display: block;
 }
 
-/* Payment Methods */
-.payment-methods {
+.error {
+  border-color: #ef4444 !important;
+}
+
+/* PAYMENT GRID */
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.payment-card {
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 12px;
 }
 
-.payment-option {
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
+.payment-card:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
 }
 
-.payment-option:hover {
-  border-color: #fdba74;
-}
-
-.payment-option.active {
+.payment-card.active {
   border-color: #ff5000;
-  background-color: #fff7ed;
+  background: #fff7ed;
 }
 
-.payment-option input {
+.payment-card input {
   position: absolute;
   opacity: 0;
-  width: 0;
-  height: 0;
 }
 
-.payment-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
+.pay-icon {
+  color: #64748b;
 }
 
-.icon-box {
+.active .pay-icon {
   color: #ff5000;
-  margin-top: 2px;
 }
 
-.text-box strong {
-  display: block;
-  color: #111;
-  font-size: 15px;
+.pay-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.text-box p {
-  font-size: 13px;
-  color: #6b7280;
-  margin: 4px 0 0;
+.pay-info strong {
+  font-size: 14px;
+  color: #0f172a;
 }
 
-/* Tóm tắt đơn hàng bên phải */
-.order-summary {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  height: fit-content;
+.pay-info span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.check-mark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: #ff5000;
+  font-weight: bold;
+}
+
+/* RIGHT COLUMN (STICKY) */
+.checkout-right {
   position: sticky;
   top: 20px;
 }
 
-.order-summary h3 {
+.summary-card h3 {
   font-size: 18px;
-  font-weight: 700;
   margin-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
 }
 
-.order-items-list {
-  max-height: 350px;
+.summary-items {
+  max-height: 40vh;
   overflow-y: auto;
   margin-bottom: 20px;
-  padding-right: 5px;
 }
 
-.order-item {
+.s-item {
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f3f4f6;
 }
 
-.item-img {
-  position: relative;
-  width: 60px;
-  height: 60px;
+.s-img {
+  width: 50px;
+  height: 50px;
   border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid #eee;
+  border: 1px solid #f1f5f9;
+  position: relative;
 }
 
-.item-img img {
+.s-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 5px;
 }
 
-.qty-badge {
+.s-qty {
   position: absolute;
-  top: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
+  top: -5px;
+  right: -5px;
+  background: #64748b;
   color: white;
   font-size: 10px;
   padding: 2px 6px;
-  border-bottom-left-radius: 6px;
+  border-radius: 10px;
 }
 
-.item-details {
+.s-info {
   flex: 1;
 }
 
-.item-details .name {
+.s-name {
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
-  margin-bottom: 4px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.3;
 }
 
-.item-details .variant {
+.s-meta {
   font-size: 12px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
-.item-price {
+.s-price {
   font-size: 14px;
   font-weight: 600;
-  color: #111;
+  text-align: right;
 }
 
+.price-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.price-col .old {
+  text-decoration: line-through;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.price-col .new {
+  color: #ef4444;
+}
+
+/* VOUCHER INTEGRATED */
+.voucher-wrapper {
+  margin-bottom: 20px;
+}
+
+.voucher-input-group {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.voucher-input-group:hover {
+  border-color: #ff5000;
+}
+
+.btn-trigger-voucher {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #0f172a;
+  flex: 1;
+  text-align: left;
+  cursor: pointer;
+}
+
+.voucher-applied {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.va-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #059669;
+}
+
+.va-code {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.btn-remove-voucher {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.va-success-text {
+  font-size: 12px;
+  color: #059669;
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* TOTALS */
 .divider {
   height: 1px;
-  background: #e5e7eb;
+  background: #f1f5f9;
   margin: 16px 0;
 }
 
-.cost-row {
+.calc-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
   font-size: 14px;
-  color: #4b5563;
+  margin-bottom: 8px;
+  color: #475569;
 }
 
-.cost-row.total {
-  font-size: 18px;
+.discount {
+  color: #059669;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 16px;
   font-weight: 700;
-  color: #111;
-  margin-top: 10px;
+  color: #0f172a;
 }
 
-.total-price {
+.total-amount {
+  font-size: 20px;
   color: #ff5000;
 }
 
-.btn-checkout {
+.btn-place-order {
   width: 100%;
   background: #ff5000;
   color: white;
   border: none;
-  padding: 14px;
-  border-radius: 6px;
-  font-weight: 700;
+  padding: 16px;
+  border-radius: 8px;
   font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  margin-top: 20px;
-  transition: background 0.2s;
+  margin-top: 24px;
+  transition: 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(255, 80, 0, 0.2);
 }
 
-.btn-checkout:hover:not(:disabled) {
+.btn-place-order:hover:not(:disabled) {
   background: #ea580c;
+  transform: translateY(-1px);
 }
 
-.btn-checkout:disabled {
+.btn-place-order:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.link-back {
+.back-link {
   display: block;
   text-align: center;
-  margin-top: 15px;
-  color: #6b7280;
+  margin-top: 16px;
+  color: #64748b;
   font-size: 13px;
   text-decoration: none;
 }
 
-.link-back:hover {
+.back-link:hover {
   color: #ff5000;
-  text-decoration: underline;
 }
 
-.spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #fff;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+/* MODAL STYLES */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.modal-panel {
+  background: #f8fafc;
+  width: 90%;
+  max-width: 450px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Responsive Mobile */
-@media (max-width: 768px) {
-  .checkout-content {
+.modal-head {
+  background: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-head h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.modal-search-bar {
+  padding: 12px 20px;
+  background: white;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  gap: 8px;
+}
+
+.modal-search-bar input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+}
+
+.modal-search-bar button {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.modal-body-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.ticket {
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  margin-bottom: 12px;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  transition: 0.2s;
+  overflow: hidden;
+}
+
+.ticket:hover {
+  border-color: #ff5000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.ticket.disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ticket-stub {
+  background: #ff5000;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 2px dashed #f8fafc;
+}
+
+.ticket-content {
+  flex: 1;
+  padding: 12px;
+}
+
+.tc-code {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.tc-desc {
+  font-size: 12px;
+  color: #64748b;
+  margin: 4px 0;
+}
+
+.tc-reason {
+  font-size: 11px;
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.tc-valid {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .checkout-layout {
     grid-template-columns: 1fr;
   }
 
-  .order-summary {
+  .checkout-right {
     position: static;
     order: -1;
-    margin-bottom: 20px;
   }
 
-  .form-row {
-    grid-template-columns: 1fr;
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: block;
   }
 }
 </style>
